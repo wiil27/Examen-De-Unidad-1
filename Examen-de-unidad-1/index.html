@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f0f0f0;
+  }
+  
+  .container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    color: #333;
+  }
+  
+  form label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+  }
+  
+  form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: #0056b3;
+  }
+  
+  #results {
+    margin-top: 20px;
+  }
+  
+  #results p {
+    background: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+</style>  
+  <title>Calculadora Integral de Triángulos</title>
+  <script>
+    function calculateTriangle() {
+    const sideA = parseFloat(document.getElementById("sideA").value);
+    const sideB = parseFloat(document.getElementById("sideB").value);
+    const sideC = parseFloat(document.getElementById("sideC").value);
+  
+    if (!isValidTriangle(sideA, sideB, sideC)) {
+      alert("Los lados no forman un triángulo válido.");
+      return;
+    }
+  
+    const angles = calculateAngles(sideA, sideB, sideC);
+    const medians = calculateMedians(sideA, sideB, sideC);
+    const bisectors = calculateBisectors(sideA, sideB, sideC);
+    const heights = calculateHeights(sideA, sideB, sideC);
+    const perimeter = sideA + sideB + sideC;
+    const area = calculateArea(sideA, sideB, sideC);
+  
+    document.getElementById("angles").textContent = angles.join(", ");
+    document.getElementById("medians").textContent = medians.join(", ");
+    document.getElementById("bisectors").textContent = bisectors.join(", ");
+    document.getElementById("heights").textContent = heights.join(", ");
+    document.getElementById("perimeter").textContent = perimeter.toFixed(2);
+    document.getElementById("area").textContent = area.toFixed(2);
+  }
+  
+  function isValidTriangle(a, b, c) {
+    return a + b > c && a + c > b && b + c > a;
+  }
+  
+  function calculateAngles(a, b, c) {
+    const angleA = Math.acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c)) * (180 / Math.PI);
+    const angleB = Math.acos((a ** 2 + c ** 2 - b ** 2) / (2 * a * c)) * (180 / Math.PI);
+    const angleC = 180 - angleA - angleB;
+    return [angleA.toFixed(2), angleB.toFixed(2), angleC.toFixed(2)];
+  }
+  
+  function calculateMedians(a, b, c) {
+    const medianA = 0.5 * Math.sqrt(2 * b ** 2 + 2 * c ** 2 - a ** 2);
+    const medianB = 0.5 * Math.sqrt(2 * a ** 2 + 2 * c ** 2 - b ** 2);
+    const medianC = 0.5 * Math.sqrt(2 * a ** 2 + 2 * b ** 2 - c ** 2);
+    return [medianA.toFixed(2), medianB.toFixed(2), medianC.toFixed(2)];
+  }
+  
+  function calculateBisectors(a, b, c) {
+    const perimeter = a + b + c;
+    const bisectorA = (2 / (b + c)) * Math.sqrt(b * c * perimeter * (perimeter - 2 * a));
+    const bisectorB = (2 / (a + c)) * Math.sqrt(a * c * perimeter * (perimeter - 2 * b));
+    const bisectorC = (2 / (a + b)) * Math.sqrt(a * b * perimeter * (perimeter - 2 * c));
+    return [bisectorA.toFixed(2), bisectorB.toFixed(2), bisectorC.toFixed(2)];
+  }
+  
+  function calculateHeights(a, b, c) {
+    const area = calculateArea(a, b, c);
+    const heightA = (2 * area) / a;
+    const heightB = (2 * area) / b;
+    const heightC = (2 * area) / c;
+    return [heightA.toFixed(2), heightB.toFixed(2), heightC.toFixed(2)];
+  }
+  
+  function calculateArea(a, b, c) {
+    const s = (a + b + c) / 2;
+    return Math.sqrt(s * (s - a) * (s - b) * (s - c));
+  }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora Integral de Triángulos</h1>
+    <form id="triangleForm">
+      <label for="sideA">Lado A:</label>
+      <input type="number" id="sideA" required step="any">
+      
+      <label for="sideB">Lado B:</label>
+      <input type="number" id="sideB" required step="any">
+      
+      <label for="sideC">Lado C:</label>
+      <input type="number" id="sideC" required step="any">
+      
+      <button type="button" onclick="calculateTriangle()">Calcular</button>
+    </form>
+    <div id="results">
+      <h2>Resultados</h2>
+      <p>Ángulos: <span id="angles"></span></p>
+      <p>Medianas: <span id="medians"></span></p>
+      <p>Bisectrices: <span id="bisectors"></span></p>
+      <p>Alturas: <span id="heights"></span></p>
+      <p>Perímetro: <span id="perimeter"></span></p>
+      <p>Área: <span id="area"></span></p>
+    </div>
+  </div>
+</body>
+</html>
